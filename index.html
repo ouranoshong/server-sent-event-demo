@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Sent Event Demo</title>
+</head>
+<body>
+
+<ul class="eventList">
+
+</ul>
+
+<script type="text/javascript">
+    var evtSource = new EventSource("ssedemo.php");
+    var eventList = document.querySelector('ul.eventList');
+
+    evtSource.onmessage = function(e) {
+        var newElement = document.createElement("li");
+
+        newElement.innerHTML = "message: " + e.data;
+        eventList.appendChild(newElement);
+    };
+
+    evtSource.addEventListener("ping", function(e) {
+        var newElement = document.createElement("li");
+
+        var obj = JSON.parse(e.data);
+        newElement.innerHTML = "ping at " + obj.time;
+        eventList.appendChild(newElement);
+    }, false);
+
+
+    evtSource.onerror = function(e) {
+        alert("EventSource failed.");
+        evtSource.close();
+    };
+
+</script>
+
+</body>
+</html>
